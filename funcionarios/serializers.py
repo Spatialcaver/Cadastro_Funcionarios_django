@@ -16,3 +16,4 @@ class FuncionarioSerializer(serializers.ModelSerializer):
         if len(cpf) != 11:
             # 2. Se for diferente de 11, levanta a exceção de validação
             raise serializers.ValidationError("CPF inválido")
+        return cpf
