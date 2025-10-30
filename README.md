@@ -5,6 +5,11 @@
 
 ---
 
+## Documentação
+_Link:_ `http://127.0.0.1:8000/schema/swagger-ui/`
+
+--
+
 ## 🛠️ Tecnologias Utilizadas
 
 * **Linguagem:** Python 3.12+
