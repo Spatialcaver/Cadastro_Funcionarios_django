@@ -1,8 +1,7 @@
-# 🏢 Cadastro de Funcionários - Django REST Framework API
+# Cadastro de Funcionários
 
-Este projeto é uma API RESTful completa desenvolvida com **Django** e **Django REST Framework (DRF)** para gerenciar o cadastro de funcionários, incluindo um relacionamento de Um para Muitos (One-to-Many) com a tabela de Empresas.
-
-O projeto foi desenvolvido com foco em demonstrar as operações **CRUD (Create, Read, Update, Delete)** e conceitos essenciais do DRF, como Serializers, Generic Views e Validações customizadas.
+## Sobre:
+- oque é o projeto....
 
 ---
 
@@ -14,7 +13,21 @@ O projeto foi desenvolvido com foco em demonstrar as operações **CRUD (Create,
 * **Banco de Dados:** SQLite3 (Padrão Django)
 * **Testes de API:** Postman
 
-## 🚀 Funcionalidades da API
+## Instalação do Projeto
+
+
+### Instalação das dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### Criando Usuário Super No Django Admin. 
+```bash
+python manage.py createsuperuser
+```
+
+
+## Funcionalidades
 
 O projeto expõe dois endpoints principais: `funcionarios` e `empresas`.
 
@@ -28,6 +41,91 @@ O projeto expõe dois endpoints principais: `funcionarios` e `empresas`.
 | **Atualizar** | `PUT` / `PATCH` | `/api/funcionarios/{id}/` | Atualiza um funcionário (completa/parcial). |
 | **Deletar** | `DELETE` | `/api/funcionarios/{id}/` | Remove um funcionário do banco de dados. |
 
+## Endpoints
+
+### Modelo de POST para Funcionários:  
+
+Rota: `api/v1/funcionarios/registrar/`
+
+```json
+
+{
+    "nome": "Funcionário Exemplo",
+    "cpf": "123.456.789-00", 
+    "matricula": 1000001,
+    "idade": 30,
+    "cargo": "Cargo Escolhido",
+    "empresa": 1  
+}
+```
+
+
+### Modelo de POST Empresas
+
+```json
+{
+    "razao_social": "Exemplo de razão social", 
+    "cnpj": "00.000.000/0000-00",
+    "segmento": "exemplo de segmento"
+    
+}
+```
+
+### Modelo de GET 
+
+#### Funcionários
+
+Rota ```api/v1/funcionarios/listar/```
+
+#### Empresas
+
+Rota ```api/v2/empresas/listar/```
+
+
+
+### Modelo de UPDATE 
+#### Funcionários
+Rota ```api/v1/funcionarios/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
+
+
+```json
+
+{
+    "nome": "Alteração Exemplo",
+    "cpf": "123.456.789-00", 
+    "matricula": 1000001,
+    "idade": 30,
+    "cargo": "Cargo Escolhido",
+    "empresa": 1  
+}
+```
+
+
+
+#### Empresas
+
+Rota ```api/v2/empresas/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
+
+```json
+{
+    "razao_social": "Exemplo de Alteração na razão social", 
+    "cnpj": "00.000.000/0000-00",
+    "segmento": "exemplo de segmento"
+    
+}
+```
+
+### Modelo de DELETE 
+#### Funcionários
+Rota ```api/v1/funcionarios/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
+
+#### Empresas
+
+Rota ```api/v2/empresas/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
+
+
+
+
 ### Validações e Relacionamentos Específicos
 
 * **Validação Customizada:** O campo `CPF` possui uma validação manual no Serializer que garante que o número de caracteres seja exatamente 14 (ex: `000.000.000-00`).
@@ -36,10 +134,10 @@ O projeto expõe dois endpoints principais: `funcionarios` e `empresas`.
 
 ---
 
-## ⚙️ Como Rodar o Projeto Localmente
+##  Como Rodar o Projeto Localmente
 
 Siga estes passos para configurar e executar a API na sua máquina.
-
+### O Painel Administrativo estará em: ```http://127.0.0.1:8000/admin/```
 ### 1. Pré-requisitos
 
 Certifique-se de ter o Python 3.x e o `pip` instalados.
@@ -54,51 +152,14 @@ cd django-funcionarios-api
 # 2. Crie e ative o ambiente virtual
 python -m venv venv
 source venv/bin/activate  # macOS/Linux
-# venv\Scripts\activate  # Windows
-
-# 3. Instale as dependências
-pip install django djangorestframework
+# venv\Scripts\activate  # Window
 
 -----------------------------------
-# Migrações e Superusuário
-
-
+# 3. Migrações 
 
 # Aplica todas as migrações (cria as tabelas de Funcionarios e Empresas)
 python manage.py migrate
 
-# Cria um usuário administrador para acessar o painel
-python manage.py createsuperuser
+# Executar o Servidor
 
-
-
-#Executar o Servidor
-
-py manage.py runserver
-
-O Painel Administrativo estará em: http://127.0.0.1:8000/admin/
-
-
--------------------------------------------------------
-#JSON de Exemplo: (Observação: Antes de enviar, crie pelo menos uma empresa no Django Admin para obter o ID)
-
-##Criando user
-{
-    "nome": "Funcionário Exemplo",
-    "cpf": "123.456.789-00", 
-    "matricula": 1000001,
-    "idade": 30,
-    "cargo": "Analista Júnior",
-    "empresa": 1  // ID da empresa cadastrada no Admin
-}
-
-
-
-##Criando Empresa
-
-{
-    "razao_social": "Exemplo de razão social", 
-    "cnpj": "00.000.000/0000-00",
-    "segmento": "exemplo de segmento"
-    
-}
+python py manage.py runserver

@@ -46,12 +46,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'drf_spectacular',
     'empresas',
     'funcionarios',
     'rest_framework',
     
 ]
+
+
+REST_FRAMEWORK = {
+    # ... suas configurações de paginação ...
+    
+    # Adicionar aqui: Configuração do Schema
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Configurações adicionais para o Spectacular (Opcional, mas recomendado)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API Cadastro de Funcionários',
+    'DESCRIPTION': 'Documentação completa da API CRUD para Funcionários e Empresas.',
+    'VERSION': 'v1',
+    'SERVE_INCLUDE_SCHEMA': False, # Não incluir o schema no endpoint /schema/
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
