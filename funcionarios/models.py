@@ -14,5 +14,12 @@ class Funcionario(models.Model):
             models.Index(fields=['cpf', 'matricula']),
         ]
 
+
+    empresa = models.ForeignKey(
+        'empresas.Empresa', on_delete=models.CASCADE,
+        related_name='Funcionarios', 
+        verbose_name='Empresa Contratante '
+        )
+
     def __str__(self):
-            return f"{self.nome} - {self.matricula}"
+     return f"{self.nome} - {self.matricula} - {self.empresa.razao_social}"

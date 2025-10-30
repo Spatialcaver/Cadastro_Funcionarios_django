@@ -8,7 +8,12 @@ from .models import Funcionario
 class FuncionarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Funcionario
-        fields = ['nome', 'cpf', 'matricula', 'cargo', 'idade']
+        fields = ['nome', 'cpf', 'matricula', 'cargo', 'idade', 'empresa']
+        
+        extra_kwargs ={
+            'matricula':{'validators':[]},
+            'cpf':{'validators':[]}
+        }
         
     def validate_cpf(self, value):
 

@@ -7,4 +7,4 @@ class EmpresaSerializer(serializers.ModelSerializer):
         model = Empresa
         fields = '__all__'
 
-  
+    
