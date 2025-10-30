@@ -11,14 +11,13 @@ class FuncionarioSerializer(serializers.ModelSerializer):
         fields = ['nome', 'cpf', 'matricula', 'cargo', 'idade', 'empresa']
         
         extra_kwargs ={
-            'matricula':{'validators':[]},
-            'cpf':{'validators':[]}
+            'matricula':{'read_only':[]},
+            'cpf':{'read_only':[]}
         }
         
     def validate_cpf(self, value):
 
         cpf = value.strip().lower().replace('.', '').replace('-', '')
         if len(cpf) != 11:
-            # 2. Se for diferente de 11, levanta a exceção de validação
             raise serializers.ValidationError("CPF inválido")
         return cpf

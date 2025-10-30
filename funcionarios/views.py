@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from .models import Funcionario
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from .serializers import FuncionarioSerializer
 from rest_framework import status
@@ -31,3 +32,6 @@ class FuncionarioDeleteView(APIView):
         queryset = Funcionario.objects.get(pk=pk)
         queryset.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+permission_classes = [permissions.IsAuthenticatedOrReadOnly]

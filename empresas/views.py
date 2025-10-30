@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from .models import Empresa
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from .serializer import EmpresaSerializer
 from rest_framework import status
@@ -35,3 +36,5 @@ class EmpresasDeleteView(APIView):
         queryset = Empresa.objects.get(pk=pk)
         queryset.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+permission_classes = [permissions.IsAuthenticatedOrReadOnly]

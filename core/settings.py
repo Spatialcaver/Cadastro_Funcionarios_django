@@ -28,6 +28,15 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+REST_FRAMEWORK = {
+    # 1. Define o estilo de paginação padrão para todas as Views de listagem
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    
+    # 2. Define o tamanho da página (ex: 5 funcionários por página)
+    'PAGE_SIZE': 5, 'MAX_PAGE_SIZE': 5
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,7 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'funcionarios_api.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'funcionarios_api.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
