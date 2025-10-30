@@ -1,7 +1,7 @@
 # Cadastro de Funcionários
 
 ## Sobre:
-### Este prjeto tem como o objetivo a Criação de um sistema de cadastro e gerenciamento de Funcionários e Empresas, onde Cada empresa pode ser composta por varios funcionários, o principal objetivo é o controle de colaboradores onde posteriormente será implementada uma função para monitoramento de carga horária por colaborador. 
+### Este prjeto tem como objetivo a Criação de um sistema de cadastro e gerenciamento de Funcionários e Empresas, onde Cada empresa pode ser composta por varios funcionários, o principal objetivo é o controle de colaboradores onde posteriormente será implementada uma função para monitoramento de carga horária por colaborador. 
 
 ---
 
