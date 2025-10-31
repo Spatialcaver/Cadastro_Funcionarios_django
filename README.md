@@ -1,7 +1,7 @@
 # Cadastro de Funcionários
 
 ## Sobre:
-### Este prjeto tem como objetivo a Criação de um sistema de cadastro e gerenciamento de Funcionários e Empresas, onde Cada empresa pode ser composta por varios funcionários, o principal objetivo é o controle de colaboradores onde posteriormente será implementada uma função para monitoramento de carga horária por colaborador. 
+### Este projeto tem como objetivo a criação de um sistema de cadastro e gerenciamento de funcionários e empresas, onde cada empresa pode ser composta por varios funcionários, o principal objetivo é o controle de colaboradores onde posteriormente será implementada uma função para monitoramento de carga horária por colaborador. 
 
 ---
 
@@ -40,17 +40,16 @@ O projeto expõe dois endpoints principais: `funcionarios` e `empresas`.
 
 | Recurso | Método | Endpoint | Descrição |
 | :--- | :--- | :--- | :--- |
-| **Listar** | `GET` | `/api/funcionarios/` | Retorna a lista de funcionários (com Paginação). |
-| **Criar** | `POST` | `/api/funcionarios/` | Cadastra um novo funcionário. |
-| **Detalhe** | `GET` | `/api/funcionarios/{id}/` | Retorna os dados de um funcionário específico. |
-| **Atualizar** | `PUT` / `PATCH` | `/api/funcionarios/{id}/` | Atualiza um funcionário (completa/parcial). |
-| **Deletar** | `DELETE` | `/api/funcionarios/{id}/` | Remove um funcionário do banco de dados. |
+| **Listar** | `GET` | `/core/v1/funcionarios/listar/` | Retorna a lista de funcionários (com Paginação). |
+| **Criar** | `POST` | `/core/v1/funcionarios/registrar/` | Cadastra um novo funcionário. |
+| **Atualizar** | `PUT` / `PATCH` | `/core/v1/funcionarios/atualizar/{id}/` | Atualiza um funcionário (completa/parcial). |
+| **Deletar** | `DELETE` | `/core/v1/funcionarios/deletar/{id}/` | Remove um funcionário do banco de dados. |
 
 ## Endpoints
 
 ### Modelo de POST para Funcionários:  
 
-Rota: `api/v1/funcionarios/registrar/`
+Rota: `core/v1/funcionarios/registrar/`
 
 ```json
 
@@ -66,7 +65,7 @@ Rota: `api/v1/funcionarios/registrar/`
 
 
 ### Modelo de POST Empresas
-
+Rota: `core/v2/empresas/registrar/`
 ```json
 {
     "razao_social": "Exemplo de razão social", 
@@ -80,17 +79,17 @@ Rota: `api/v1/funcionarios/registrar/`
 
 #### Funcionários
 
-Rota ```api/v1/funcionarios/listar/```
+Rota ```core/v1/funcionarios/listar/```
 
 #### Empresas
 
-Rota ```api/v2/empresas/listar/```
+Rota ```core/v2/empresas/listar/```
 
 
 
 ### Modelo de UPDATE 
 #### Funcionários
-Rota ```api/v1/funcionarios/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
+Rota ```core/v1/funcionarios/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
 
 
 ```json
@@ -109,7 +108,7 @@ Rota ```api/v1/funcionarios/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` 
 
 #### Empresas
 
-Rota ```api/v2/empresas/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
+Rota ```core/v2/empresas/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
 
 ```json
 {
@@ -122,11 +121,11 @@ Rota ```api/v2/empresas/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo
 
 ### Modelo de DELETE 
 #### Funcionários
-Rota ```api/v1/funcionarios/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
+Rota ```core/v1/funcionarios/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
 
 #### Empresas
 
-Rota ```api/v2/empresas/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
+Rota ```core/v2/empresas/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
 
 
 
