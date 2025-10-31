@@ -2,16 +2,12 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/v1/', include('funcionarios.urls')),
-    path('api/v2/', include ('empresas.urls'))
-]
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('funcionarios/', include('funcionarios.urls')),
-    path('empresas/', include('empresas.urls')),
+    path('core/v1/funcionarios/', include('funcionarios.urls')),
+    path('core/v2/empresas/', include('empresas.urls')),
     
     # -----------------------------------------------------
     # ROTAS DE DOCUMENTAÇÃO (ADICIONAR AQUI)
