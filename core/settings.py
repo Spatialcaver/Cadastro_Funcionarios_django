@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'empresas',
     'contas',
+   
     'funcionarios',
     'rest_framework',
     'rest_framework_simplejwt',

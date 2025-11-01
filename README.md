@@ -65,7 +65,7 @@ Rota: `core/v1/funcionarios/registrar/`
 
 
 ### Modelo de POST Empresas
-Rota: `core/v2/empresas/registrar/`
+Rota: `core/v1/empresas/registrar/`
 ```json
 {
     "razao_social": "Exemplo de razão social", 
@@ -83,7 +83,7 @@ Rota ```core/v1/funcionarios/listar/```
 
 #### Empresas
 
-Rota ```core/v2/empresas/listar/```
+Rota ```core/v1/empresas/listar/```
 
 
 
@@ -108,7 +108,7 @@ Rota ```core/v1/funcionarios/atualizar/<int:pk>/```  Subistituir ```<int:pk>/```
 
 #### Empresas
 
-Rota ```core/v2/empresas/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
+Rota ```core/v1/empresas/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
 
 ```json
 {
@@ -125,7 +125,7 @@ Rota ```core/v1/funcionarios/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` p
 
 #### Empresas
 
-Rota ```core/v2/empresas/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
+Rota ```core/v1/empresas/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
 
 
 
