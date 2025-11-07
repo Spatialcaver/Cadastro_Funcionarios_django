@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from decouple import config
 from pathlib import Path
 from datetime import timedelta
 
@@ -21,22 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wrw_ih11eogo5ep^-0x*n!$z@1fe@st+tb)sq*gm^u3r%n*v0j'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
-
-
-
-REST_FRAMEWORK = {
-    # 1. Define o estilo de paginação padrão para todas as Views de listagem
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
     
-    # 2. Define o tamanho da página (ex: 5 funcionários por página)
-    'PAGE_SIZE': 5, 'MAX_PAGE_SIZE': 5
-}
+else:
+    ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
+
 
 # Application definition
 
@@ -57,23 +53,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     
 ]
-
-
-REST_FRAMEWORK = {
-    # ... suas configurações de paginação ...
-    
-    # Adicionar aqui: Configuração do Schema
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-# Configurações adicionais para o Spectacular (Opcional, mas recomendado)
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'API Cadastro de Funcionários',
-    'DESCRIPTION': 'Documentação completa da API CRUD para Funcionários e Empresas.',
-    'VERSION': 'v1',
-    'SERVE_INCLUDE_SCHEMA': False, # Não incluir o schema no endpoint /schema/
-}
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,9 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -157,9 +136,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
-    # Suas configurações de SCHEMA e PAGINATION aqui...
-    
-    # NOVAS CONFIGURAÇÕES DE AUTENTICAÇÃO:
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # Permite autenticação via JWT (para APIs) e Session (para o Admin)
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -169,18 +146,35 @@ REST_FRAMEWORK = {
         # Por padrão, permite leitura a todos, mas exige autenticação para escrita
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
+     # 1. Define o estilo de paginação padrão para todas as Views de listagem
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    
+    # 2. Define o tamanho da página (ex: 5 funcionários por página)
+    'PAGE_SIZE': 5, 
+    'MAX_PAGE_SIZE': 100
     # ...
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API Cadastro de Funcionários',
+    'DESCRIPTION': 'Documentação completa da API CRUD para Funcionários e Empresas.',
+    'VERSION': 'v1',
+    'SERVE_INCLUDE_SCHEMA': False, # Não incluir o schema no endpoint /schema/
+}
+
 
 AUTH_USER_MODEL = 'contas.User'
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=8),
-    "CANCEL_TOKEN_LIFETIME": timedelta(days=15),
+   "ACCESS_TOKEN_LIFETIME": timedelta(hours=1), 
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7), 
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    'USER_ID_FIELD': 'id', 
 }

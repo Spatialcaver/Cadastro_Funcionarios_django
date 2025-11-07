@@ -5,6 +5,17 @@ from rest_framework.response import Response
 from .serializers import FuncionarioSerializer
 from rest_framework import status
 
+
+
+class FuncionarioListCreateView(generics.ListCreateAPIView):
+  
+    permission_classes = [permissions.IsAuthenticated] 
+    
+    
+    def perform_create(self, serializer):
+      
+        serializer.save()
+
 class FuncionarioCreateView(APIView):
     def post(self, request):
         serializer = FuncionarioSerializer(data=request.data)
