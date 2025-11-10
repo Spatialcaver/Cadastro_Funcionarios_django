@@ -1,9 +1,10 @@
+# funcionarios/urls.py (Correção)
+
 from django.urls import path
-from .views import FuncionarioCreateView, FuncionarioListView, FuncionarioUpdateView, FuncionarioDeleteView
+from .views import FuncionarioListCreateView, FuncionarioRetrieveUpdateDestroyView # <-- Usar APENAS as classes consolidadas
 
 urlpatterns = [
-    path('registrar/', FuncionarioCreateView.as_view()),
-    path('listar/', FuncionarioListView.as_view()),
-    path('atualizar/<int:pk>/', FuncionarioUpdateView.as_view()),
-    path('deletar/<int:pk>/', FuncionarioDeleteView.as_view())
+    # Rotas de CRUD (Consolidado)
+    path('', FuncionarioListCreateView.as_view(), name='funcionario-list-create'),
+    path('<int:pk>/', FuncionarioRetrieveUpdateDestroyView.as_view(), name='funcionario-detail'),
 ]
