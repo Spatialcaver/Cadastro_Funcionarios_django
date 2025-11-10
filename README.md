@@ -8,7 +8,7 @@
 ## Documentação
 _Link:_ `http://127.0.0.1:8000/schema/swagger-ui/`
 
---
+
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -32,111 +32,62 @@ python manage.py createsuperuser
 ```
 
 
-## Funcionalidades
+## Funcionalidades e Endpoints
 
-O projeto expõe dois endpoints principais: `funcionarios` e `empresas`.
+-  O projeto utiliza a arquitetura consolidada do DRF, onde cada View Genérica cobre múltiplas operações.
 
-### Funcionalidades do CRUD:
+### Autenticação e Perfil:
 
-| Recurso | Método | Endpoint | Descrição |
+| Recurso | Método | Endpoint | Proteção |
 | :--- | :--- | :--- | :--- |
-| **Listar** | `GET` | `/core/v1/funcionarios/listar/` | Retorna a lista de funcionários (com Paginação). |
-| **Criar** | `POST` | `/core/v1/funcionarios/registrar/` | Cadastra um novo funcionário. |
-| **Atualizar** | `PUT` / `PATCH` | `/core/v1/funcionarios/atualizar/{id}/` | Atualiza um funcionário (completa/parcial). |
-| **Deletar** | `DELETE` | `/core/v1/funcionarios/deletar/{id}/` | Remove um funcionário do banco de dados. |
+| **Login (Obter Token)** | `POST` | `/auth/token/` | AllowAny |
+| **Logout (Invalidar Token)** | `POST` | `/auth/logout/` | JWT Token|
+| **Perfil do Colaborador** | `GET / PATCH` | `/auth/me//` | JWT Token|
 
-## Endpoints
 
-### Modelo de POST para Funcionários:  
+## CRUD Funcionarios e Empresas(App Funcionarios)
+| Recurso | Método | Endpoint | Proteção |
+| :--- | :--- | :--- | :--- |
+| **Listar / Criar** | `GET / POST` | `/funcionarios/` | JWT Token |
+| **Detalhe / Modificar / Deletar** | `GET / PUT / PATCH / DELETE` | `/funcionarios/{id}/` | JWT Token|
 
-Rota: `core/v1/funcionarios/registrar/`
 
-```json
+# Modelos de Requisição
+
+### Login (Obtenção do Token)
+Rota: ``` /auth/token```
+
+``` json
 
 {
-    "nome": "Funcionário Exemplo",
-    "cpf": "123.456.789-00", 
-    "matricula": 1000001,
-    "idade": 30,
-    "cargo": "Cargo Escolhido",
-    "empresa": 1  
+    "email": "seu_email@dominio.com",
+    "password": "sua_senha"
 }
+
 ```
 
+### Criação de Funcionário (POST)
+Rota: ``` /funcionarios/``` (Requer Access Token no Header)
 
-### Modelo de POST Empresas
-Rota: `core/v1/empresas/registrar/`
-```json
-{
-    "razao_social": "Exemplo de razão social", 
-    "cnpj": "00.000.000/0000-00",
-    "segmento": "exemplo de segmento"
-    
-}
-```
-
-### Modelo de GET 
-
-#### Funcionários
-
-Rota ```core/v1/funcionarios/listar/```
-
-#### Empresas
-
-Rota ```core/v1/empresas/listar/```
-
-
-
-### Modelo de UPDATE 
-#### Funcionários
-Rota ```core/v1/funcionarios/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
-
-
-```json
+``` json
 
 {
-    "nome": "Alteração Exemplo",
-    "cpf": "123.456.789-00", 
-    "matricula": 1000001,
-    "idade": 30,
-    "cargo": "Cargo Escolhido",
-    "empresa": 1  
+    "usuario": 1,         // ID do User (conta) criado no Admin
+    "empresa": 1,         // ID da Empresa existente
+    "cpf": "11122233344", 
+    "matricula": "2025005",
+    "cargo": "Desenvolvedor Pleno",
+    "idade": 30
 }
+
 ```
 
 
 
-#### Empresas
 
-Rota ```core/v1/empresas/atualizar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado, e alterar campos no ```JSON```.
-
-```json
-{
-    "razao_social": "Exemplo de Alteração na razão social", 
-    "cnpj": "00.000.000/0000-00",
-    "segmento": "exemplo de segmento"
-    
-}
-```
-
-### Modelo de DELETE 
-#### Funcionários
-Rota ```core/v1/funcionarios/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
-
-#### Empresas
-
-Rota ```core/v1/empresas/deletar/<int:pk>/```  Subistituir ```<int:pk>/``` pelo ID do objeto a ser atualizado.
-
-
-
-
-### Validações e Relacionamentos Específicos
-
-* **Validação Customizada:** O campo `CPF` possui uma validação manual no Serializer que garante que o número de caracteres seja exatamente 14 (ex: `000.000.000-00`).
-* **Relacionamento:** `Funcionario` possui uma **ForeignKey** (`empresa`) para o modelo `Empresa`.
-* **Exibição:** O nome legível da empresa é retornado nas respostas JSON da API (`StringRelatedField`) e é exibido corretamente no Django Admin.
-
----
+# Validações e Relacionamentos
+- Validação CPF: O campo ```cpf``` é validado para ter exatamente 11 dígitos numéricos (a API remove a pontuação antes de validar).
+- Relacionamento FK: O campo ```usuario``` (ForeignKey para ```contas.User```) e o campo ```empresa``` (ForeignKey para ```empresas.Empresa```) são obrigatórios na criação.
 
 ##  Como Rodar o Projeto Localmente
 
