@@ -10,13 +10,15 @@ _Link:_ `http://127.0.0.1:8000/schema/swagger-ui/`
 
 
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas e Configuração
 
-* **Linguagem:** Python 3.12+
-* **Framework:** Django (5.x)
-* **API Framework:** Django REST Framework (DRF)
-* **Banco de Dados:** SQLite3 (Padrão Django)
-* **Testes de API:** Postman
+* **Linguagem:** ```Python 3.12+```
+* **Framework:** ```Django (5.x)```
+* **API Framework:** ```Django REST Framework (DRF)```
+* **Banco de Dados:** ```SQLite3``` (Padrão Django)
+* **Testes de API:** ```Postman```
+* **Localização:** ```pt-br``` e ```America/Sao_Paulo```.
+* **Autenticação:** ```Simple JWT``` (Centralizado no app ```contas```)
 
 ## Instalação do Projeto
 
