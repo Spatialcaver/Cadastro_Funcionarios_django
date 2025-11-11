@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'empresas',
     'contas',
-   
+    'corsheaders',
     'funcionarios',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -178,3 +179,13 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     'USER_ID_FIELD': 'id', 
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",  # Comum para React/Vite/Frontend frameworks
+    "http://127.0.0.1:3000",
+]
+
+# NECESSÁRIO para o seu teste de abrir o index.html diretamente no navegador (file://)
+CORS_ALLOW_ALL_ORIGINS = True

@@ -8,12 +8,17 @@ from rest_framework.views import APIView
 from django.utils.timezone import now
 from rest_framework import status
 from contas.exeptions import ValidationError
-from contas.serializer import UserSerializer
+from contas.serializer import CustomTokenObtainPairSerializer, UserSerializer
 from contas.models import User
 from django.conf import settings
+from funcionarios.models import Funcionario
 import uuid
 import os
 from contas.auth import AuthenticationService
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class SignInView(APIView):
@@ -21,11 +26,11 @@ class SignInView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        email = request.data.get("email")
+        matricula = request.data.get("matricula")
         password = request.data.get("password")
 
         auth_service = AuthenticationService()
-        signin = auth_service.signin(email, password)
+        signin = auth_service.signin(matricula, password)
 
         if not signin:
             raise AuthenticationFailed(
@@ -138,7 +143,7 @@ class UserView(APIView):
         name = request.data.get("name", user.name)
         email = request.data.get("email", user.email)
         password = request.data.get("password")
-        avatar = request.FILES.get("avatar")
+       
 
         user.name = name
         user.email = email
@@ -146,37 +151,45 @@ class UserView(APIView):
         if password:
             user.set_password(password)
 
-        storage = FileSystemStorage(
-            location=os.path.join(settings.MEDIA_ROOT, 'avatars'),
-            base_url=f"{settings.MEDIA_URL}avatars/"
-        )
+        
 
-        if avatar:
-            content_type = avatar.content_type
-            extension = avatar.name.split(".")[-1]
-            if content_type not in ["image/jpeg", "image/png"]:
-                raise ValidationError(
-                    "Formato de imagem inválido. Use JPEG ou PNG.",
-                    code=status.HTTP_400_BAD_REQUEST,
-                )
-            if extension not in ["jpg", "jpeg", "png"]:
-                raise ValidationError(
-                    "Extensão de imagem inválida. Use .jpg, .jpeg ou .png.",
-                    code=status.HTTP_400_BAD_REQUEST,
-                )
-            
-            # Remove avatar anterior se existir e não for o padrão
-            if user.avatar and user.avatar != "/media/avatars/default.png":
-                old_file_path = user.avatar.replace(settings.MEDIA_URL, "")
-                if storage.exists(old_file_path):
-                    storage.delete(old_file_path)
-            
-            filename = f"{uuid.uuid4()}.{extension}"
-            file_path = storage.save(filename, avatar)
-            user.avatar = storage.url(file_path)
+        
 
         user.save()
 
         user_data = UserSerializer(user).data
 
         return Response({"result": user_data}, status=status.HTTP_200_OK)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+    permission_classes = (AllowAny,)
+
+
+class UserProfileView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+    def patch(self, request):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+            token = OutstandingToken.objects.get(token=request.auth)
+            BlacklistedToken.objects.create(token=token)
+            return Response({'detail': 'Logout realizado com sucesso'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
