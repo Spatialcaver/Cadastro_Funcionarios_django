@@ -8,10 +8,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum , Q, F
 
-# ----------------------------------------------------------------------
-# 1. FuncionarioListCreateView (Rota: /api/funcionarios/)
-# Cobre: GET (Lista) e POST (Criação)
-# ----------------------------------------------------------------------
+
 class FuncionarioListCreateView(generics.ListCreateAPIView):
  
     queryset = Funcionario.objects.all()
@@ -25,10 +22,7 @@ class FuncionarioListCreateView(generics.ListCreateAPIView):
 
     
 
-# ----------------------------------------------------------------------
-# 2. FuncionarioRetrieveUpdateDestroyView (Rota: /api/funcionarios/<pk>/)
-# Cobre: GET (Detalhe), PUT/PATCH (Atualização) e DELETE (Deleção)
-# ----------------------------------------------------------------------
+
 class FuncionarioRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     Permite visualizar os detalhes, atualizar ou deletar um funcionário específico.
