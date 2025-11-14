@@ -1,6 +1,6 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -42,5 +42,32 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'matricula', 'email', 'is_active')
+        fields = ('id', 'name', 'matricula', 'email', 'is_active', 'is_staff', 'is_superuser')
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=8)
+    class Meta:
+        model = User
+        # 🛑 CORREÇÃO: Adicione 'is_staff' nos campos
+        fields = ('id', 'name', 'email', 'matricula', 'password', 'is_staff') 
+        extra_kwargs = {
+            # Torna is_staff opcional para ser usado se o Admin o fornecer.
+            'is_staff': {'required': False} 
+        }
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        
+        # 🛑 CORREÇÃO: Pop o is_staff também, com um default seguro (False)
+        is_staff = validated_data.pop('is_staff', False) 
+        
+        user = User(**validated_data)
+        user.set_password(password)
+        
+        # Define is_staff baseado no valor fornecido (apenas se for fornecido True)
+        user.is_staff = is_staff 
+        
+        user.save()
+        return user
 

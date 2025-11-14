@@ -17,7 +17,10 @@
 </head>
 <body>
     <div class="container">
+        
+    
         <h2>Acesso Colaborador</h2>
+        
         
         <div id="login-area">
             <input type="text" id="matricula" placeholder="Matrícula" required>
@@ -26,6 +29,11 @@
         </div>
 
         <div id="ponto-area">
+            <div id="perfil-display" style="text-align: center; margin-bottom: 20px; display: none;">
+            
+            <p>Matrícula: <strong id="matricula-colaborador"></strong></p>
+            <p><strong id="nome-colaborador"></strong></p>
+        </div>
             <button id="ponto-btn">BATER PONTO</button>
             <button id="logout-btn">Sair</button>
         </div>
@@ -34,6 +42,7 @@
     </div>
 
     <div id="meta-display" style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
+        
     </div>
     
     <script src="app.js"></script>

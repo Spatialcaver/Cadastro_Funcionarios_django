@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gerenciamento | Ponto App</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --bg-light: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-light);
+            color: #343a40;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* --- Login Area Styling --- */
+        #admin-login-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        #admin-login-area input {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #admin-login-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        #admin-login-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #admin-logout-btn {
+            background-color: var(--danger-color);
+            color: white;
+            float: right;
+            margin-bottom: 20px;
+            padding-top: 5px;
+            margin-top: 0px;
+        }
+
+        #admin-logout-btn:hover {
+            background-color: #c82333;
+        }
+        
+        #admin-status {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        /* --- Table Styling --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table th {
+            background-color: var(--primary-color);
+            color: white;
+            text-transform: uppercase;
+        }
+
+        table tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+
+        /* Estilos para o status da meta */
+        .meta-atingida-sim {
+            background-color: #e2f0e6; /* Verde muito claro */
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        .meta-atingida-nao {
+            background-color: #fcebeb; /* Vermelho muito claro */
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div id="admin-login-area">
+            <h2>Login Administrativo</h2>
+            <input id="admin-matricula" type="text" placeholder="Matrícula Admin" required>
+            <input id="admin-password" type="password" placeholder="Senha Admin" required>
+            <button id="admin-login-btn">Entrar</button>
+            <p id="panel-status">Por favor, faça login para acessar o painel.</p>
+        </div>
+
+        <div id="admin-panel" style="display: none;">
+            <button id="admin-logout-btn">Sair</button>
+            <h2>Controle Centralizado de Metas</h2>
+            
+            <p id="panel-status-data">Carregando dados...</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Matrícula</th>
+                        <th>Cargo</th>
+                        <th>Progresso (%)</th>
+                        <th>Meta Atingida</th>
+                    </tr>
+                </thead>
+                <tbody id="funcionarios-table-body">
+                    </tbody>
+            </table>
+        </div>
+
+
+        <div id="register-area" style="display: none;">
+
+            <div id="register-status" style="margin-bottom: 15px; font-weight: bold;"></div>
+            <div style="margin-top: 30px; border: 1px solid #ccc; padding: 20px; border-radius: 6px;">
+                <h3>Novo Registro de Colaborador</h3>
+                <div id="register-status" style="margin-bottom: 15px; font-weight: bold;"></div>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input id="reg-name" type="text" placeholder="Nome Completo" required style="flex: 1 1 200px; padding: 10px;">
+                    <input id="reg-matricula" type="text" placeholder="Matrícula (Máx 7)" required style="flex: 1 1 150px; padding: 10px;">
+                    <input id="reg-email" type="email" placeholder="Email" required style="flex: 1 1 200px; padding: 10px;">
+                    <input id="reg-password" type="password" placeholder="Senha (Mín 8 caracteres)" required style="flex: 1 1 200px; padding: 10px;">
+
+                    <div style="flex: 1 1 150px; display: flex; align-items: center; padding: 10px 0;">
+                        <input type="checkbox" id="reg-is-staff" style="margin-right: 5px; width: 20px; height: 20px;">
+                        <label for="reg-is-staff">Usuário Staff/Admin?</label>
+                    </div>
+                    
+                    <button id="register-btn" style="background-color: var(--success-color); color: white; flex: 0 0 auto;">
+                        Registrar Usuário
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="admin-painel.js"></script>
+</body>
+</html>

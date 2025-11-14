@@ -2,11 +2,12 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.core.files.storage import FileSystemStorage
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.timezone import now
 from rest_framework import status
+import contas
 from contas.exeptions import ValidationError
 from contas.serializer import CustomTokenObtainPairSerializer, UserSerializer
 from contas.models import User
@@ -17,6 +18,8 @@ import os
 from contas.auth import AuthenticationService
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
+from rest_framework.generics import CreateAPIView
+from .serializer import RegisterSerializer
 
 User = get_user_model()
 
@@ -37,13 +40,25 @@ class SignInView(APIView):
                 "Credenciais inválidas.", code=status.HTTP_401_UNAUTHORIZED
             )
 
+        # serializar usuário
         user = UserSerializer(signin).data
         refresh = RefreshToken.for_user(signin)
+
+        # tentar obter Funcionario associado (pode ser None)
+        try:
+            func = Funcionario.objects.get(usuario=signin)
+            funcionario_nome = getattr(func.usuario, 'name', None)
+            funcionario_matricula = func.matricula
+        except Funcionario.DoesNotExist:
+            funcionario_nome = getattr(signin, 'name', None)
+            funcionario_matricula = None
 
         return Response(
             {
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
+                "funcionario_nome": funcionario_nome,
+                "funcionario_matricula": funcionario_matricula,
             },
             status=status.HTTP_200_OK,
         )
@@ -79,6 +94,8 @@ class SignUpView(APIView):
             {
                 "result": {
                     "user": user,
+                    'funcionario_nome': Funcionario.usuario.name,
+                    "funcionario_matricula": Funcionario.usuario.matricula,
                     "access": str(refresh.access_token),
                     "refresh": str(refresh),
                 }
@@ -193,3 +210,8 @@ class LogoutView(APIView):
             return Response({'detail': 'Logout realizado com sucesso'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RegisterView(CreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = RegisterSerializer

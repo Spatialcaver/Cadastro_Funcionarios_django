@@ -1,10 +1,12 @@
 from datetime import timedelta
 from django.utils import timezone
 from funcionarios.models import Funcionario, Jornada
-from funcionarios.serializers import FuncionarioSerializer, JornadaSerializer
+from funcionarios.serializers import FuncionarioSerializer, FuncionarioSerializerControle, JornadaSerializer
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.db.models import Value, DecimalField, FloatField, ExpressionWrapper # Importar Value e DecimalField
+from django.db.models.functions import Coalesce # Importar a função Coalesce
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum , Q, F
 
@@ -151,23 +153,46 @@ class GestaoRankingView(generics.ListAPIView):
     """
     Endpoint para o Gestor visualizar o ranking de progresso de toda a equipe na semana.
     """
-    serializer_class = FuncionarioSerializer # Usamos o serializer de Funcionário
-    permission_classes = [permissions.IsAuthenticated]
+    # 🛑 1. Restrição de Permissão: Apenas Staff/Admin pode acessar
+    # permissions.IsAdminUser verifica is_staff e is_superuser (se IS_STAFF_VIEW is True no settings, senão só is_superuser)
+    # Recomendado: Crie uma permissão customizada se quiser só Staff, mas IsAdminUser funciona bem.
+    permission_classes = [permissions.IsAdminUser] 
+    
+    # Vamos usar um serializer customizado para incluir nome, matricula, cargo e meta.
+    serializer_class = FuncionarioSerializerControle # Vamos criar este Serializer no 1.2
 
+    # A lógica de get_queryset está excelente para calcular horas e percentual.
+    # Apenas vamos garantir que os campos estejam disponíveis para o serializer.
+    META_HORAS_SEMANAIS = 14.0 # Garanta que esta constante esteja acessível
+    
     def get_queryset(self):
-        # 1. Define o ciclo semanal (Segunda a Domingo)
         hoje = timezone.localdate()
         inicio_semana = hoje - timedelta(days=hoje.weekday()) 
         fim_semana = inicio_semana + timedelta(days=6) 
         
-        # 2. Agrega as horas trabalhadas na semana ATUAL
         queryset = Funcionario.objects.annotate(
             horas_atuais=Sum(
                 'jornadas__horas_trabalhadas',
                 filter= Q(jornadas__hora_entrada__date__range=[inicio_semana, fim_semana])
             )
         ).annotate(
-            progresso_percentual=(F('horas_atuais') / META_HORAS_SEMANAIS) * 100
-        ).order_by('-horas_atuais') # Ordena por quem tem mais horas
+            # 1. Coalesce para garantir 0.00 se for NULL
+            horas_atuais_num=Coalesce(F('horas_atuais'), Value(0.00, output_field=DecimalField())),
+        ).annotate(
+            # 🛑 2. CORREÇÃO FINAL AQUI: 
+            # O output_field deve ser anexado à expressão de cálculo, não como argumento extra.
+            progresso_percentual=F('horas_atuais_num') / self.META_HORAS_SEMANAIS * 100,
+            # Se a anotação for complexa, como a nossa, o jeito mais limpo é o ExpressionWrapper, 
+            # mas vamos tentar a forma mais simples que geralmente funciona para divisões:
+            
+        )
+        
+        # 💡 Tenta a forma simples com output_field na expressão:
+        queryset = queryset.annotate(
+            progresso_percentual=ExpressionWrapper(
+                F('horas_atuais_num') / self.META_HORAS_SEMANAIS * 100,
+                output_field=FloatField()
+            )
+        ).order_by('-horas_atuais_num')
         
         return queryset

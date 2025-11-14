@@ -17,5 +17,5 @@ urlpatterns = [
     path('ponto/bater/', BaterPontoAPIView.as_view(), name='bater-ponto'),
     path('progresso/', ProgressoMetaView.as_view(), name='progresso-meta'),
     path('jornadas/me/', MinhasJornadasView.as_view(), name='minhas-jornadas'),
-    path('ranking/', GestaoRankingView.as_view(), name='gestao-ranking'),
+    path('controle/ranking/', GestaoRankingView.as_view(), name='controle-ranking'),
 ]
