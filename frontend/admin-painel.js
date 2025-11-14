@@ -1,7 +1,7 @@
 // frontend/admin-panel.js
 
 // 🛑 IMPORTANTE: Configure a URL base da sua API
-const API_BASE_URL = 'http://127.0.0.1:8000'; 
+const API_BASE_URL = 'web-production-f251d.up.railway.app'; 
 
 
 const regNameInput = document.getElementById('reg-name');

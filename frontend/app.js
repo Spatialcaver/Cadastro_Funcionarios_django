@@ -1,6 +1,6 @@
 // frontend/app.js
 
-const API_BASE_URL = 'http://127.0.0.1:8000'; // Sua API Django
+const API_BASE_URL = 'web-production-f251d.up.railway.app'; // Sua API Django
 const statusElement = document.getElementById('status');
 const loginArea = document.getElementById('login-area');
 const pontoBtn = document.getElementById('ponto-btn');
